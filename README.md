@@ -27,6 +27,11 @@ MIN_UNIQUE  # amount of unique reads to call an insertion site - default 4 <BR>
 ## Running
 Assuming that the bam files is in the correct format, start the HISeq.start.sh for each direction (5'/3'), given the bam file, the direction, the reference and the offset bases to the adapter 4 for HiSeq and 5 for MiSeq.<BR>
 
-F
+For large runs we use for loop like<BR>
+for ((i=48;$i<94;i++)) ; do <BR>
+bsub.py 8 QISeq.$i QISeq.sh 17240_8#$i 3prim /lustre/scratch108/parasites/tdo/Pfalciparum/NF54/ICORN_Feb2014_150bp/PfNF54.fasta 4; <BR>
+done<BR>
+
+The results can be collect with the QISeq.join.pl script.
 
 
