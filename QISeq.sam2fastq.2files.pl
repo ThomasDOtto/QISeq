@@ -20,7 +20,6 @@
 #
 ####
 
-
 use strict;
 my $resultname=shift;
 if ((!(defined($resultname)))) {
@@ -41,7 +40,7 @@ my $res2='';
 
 my $count=0;
 
-my %QISeq.K;
+my %QISeqOK;
 while (<STDIN>) {
   chomp;
   
@@ -50,24 +49,24 @@ while (<STDIN>) {
  $ar[0] =~ s/\.F$//g;
   $ar[0] =~ s/\/\d$//g;
 
-my $QISeq.ual="";
-my $QISeq."";
+my $QISeqQual="";
+my $QISeq="";
 if (/tr:Z:(\S+)/){
-	$QISeq.$1;
-$QISeq.K{$ar[0]}=1;
+	$QISeq=$1;
+$QISeqOK{$ar[0]}=1;
 /tq:Z:(\S+)/;
-$QISeq.ual=$1;
+$QISeqQual=$1;
 }  
 
   if (defined($seenMate{$ar[0]})) {
 	### first mate
-	my $tmp=getfastq(\@ar,$QISeq.$QISeq.ual);
+	my $tmp=getfastq(\@ar,$QISeq,$QISeqQual);
 	
-	if ($ar[1] & 0x0040 && defined($QISeq.K{$ar[0]})) {
+	if ($ar[1] & 0x0040 && defined($QISeqOK{$ar[0]})) {
 	  $res1.=$tmp;
 	  $res2.=$seenMate{$ar[0]}
 	}
-	elsif (defined($QISeq.K{$ar[0]})) {
+	elsif (defined($QISeqOK{$ar[0]})) {
 	  $res1.=$seenMate{$ar[0]};
 	  $res2.=$tmp;
 	}
@@ -85,7 +84,7 @@ $QISeq.ual=$1;
 	
   }
   else {
-	$seenMate{$ar[0]}=getfastq(\@ar,$QISeq.$QISeq.ual)
+	$seenMate{$ar[0]}=getfastq(\@ar,$QISeq,$QISeqQual)
   }
 }
 print F $res1;
@@ -112,9 +111,9 @@ sub revcomp{
 sub getfastq{
   my $ar=shift;
 	
-#### insertion of tradis
-my $QISeq.shift;  
-my $QISeq.ual=shift;
+#### insertion of QISeq
+my $QISeq=shift;  
+my $QISeqQual=shift;
 
   my $res;
   if ($$ar[1] & 0x0040) {
@@ -123,13 +122,13 @@ my $QISeq.ual=shift;
   else {
 	$res="@".$$ar[0]."/2\n";
   }
-if (defined($QISeq.){
+if (defined($QISeq)){
   if ($$ar[1] & 0x0010) {
 	### have to recomp seq
-	$res.=$QISeq.revcomp($$ar[9])."\n"."+\n".$QISeq.ual.reverse($$ar[10])."\n";
+	$res.=$QISeq.revcomp($$ar[9])."\n"."+\n".$QISeqQual.reverse($$ar[10])."\n";
   }
   else {
-	$res.=$QISeq.$$ar[9]."\n"."+\n$QISeq.ual".$$ar[10]."\n";
+	$res.=$QISeq.$$ar[9]."\n"."+\n$QISeqQual".$$ar[10]."\n";
   }}
 else {
 if ($$ar[1] & 0x0010) {
